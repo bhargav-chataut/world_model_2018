@@ -60,12 +60,14 @@ def vae_loss(reconstruction, x, mu, log_var):
         kl_loss
     """
 
+    # Use mean squared error for reconstruction loss.
     reconstruction_loss = F.mse_loss(
         reconstruction,
         x,
         reduction="sum"
     )
 
+    # KL Loss = -0.5 * sum(1 + log_var - mu^2 - var^2)
     kl_loss = -0.5 * torch.sum(
         1 + log_var - mu.pow(2) - log_var.exp()
     )
@@ -78,3 +80,79 @@ def vae_loss(reconstruction, x, mu, log_var):
     total_loss = reconstruction_loss + kl_loss
 
     return total_loss, reconstruction_loss, kl_loss
+
+
+
+def train():
+    """
+    Load the dataset, create batches, train the VAE, and save the model.
+    """
+
+    device = torch.device(
+        "cuda" if torch.cuda.is_available() else "cpu"
+    )
+
+    print("Device:", device)
+
+    train_frames, val_frames = load_dataset(DATA_DIR)
+
+    train_frames = prepare_frames(train_frames)
+    val_frames = prepare_frames(val_frames)
+
+    train_dataset = TensorDataset(train_frames)
+    val_dataset = TensorDataset(val_frames)
+
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=True
+    )
+
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=False
+    )
+
+    model = VAE().to(device)
+
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=LEARNING_RATE
+    )
+
+    for epoch in range(EPOCHS):
+
+        # Put the model in training mode. This is important for layers like dropout and batchnorm.
+        model.train()
+
+        train_loss = 0
+
+        # Loop through batches of training data. (x,) is a tuple, so we unpack it to get the actual batch of images.
+        for (x,) in train_loader:
+
+            x = x.to(device)
+
+            optimizer.zero_grad()
+
+            reconstruction, mu, log_var = model(x)
+
+            loss, reconstruction_loss, kl_loss = vae_loss(
+                reconstruction,
+                x,
+                mu,
+                log_var
+            )
+
+            loss.backward()
+
+            optimizer.step()
+
+            train_loss += loss.item()
+
+        average_train_loss = train_loss / len(train_loader)
+
+        print(
+            f"Epoch {epoch + 1}/{EPOCHS} "
+            f"| Train Loss: {average_train_loss:.2f}"
+        )
