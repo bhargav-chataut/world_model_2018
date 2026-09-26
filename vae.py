@@ -124,7 +124,8 @@ class VAE(nn.Module):
 
     def reparameterize(self, mu, log_var):
         """
-        Sample latent vector z.
+        Sample latent vector z. 
+        Uses the reparameterization of sampling epsilon to allow backpropagation.
 
         Returns:
             sampled latent vector z
