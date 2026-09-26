@@ -45,3 +45,36 @@ def prepare_frames(frames):
     return frames
 
 
+def vae_loss(reconstruction, x, mu, log_var):
+    """
+    Calculate reconstruction loss + KL loss.
+
+    reconstruction: VAE output image
+    x: original image
+    mu: latent means
+    log_var: latent log variances
+
+    Returns:
+        total_loss
+        reconstruction_loss
+        kl_loss
+    """
+
+    reconstruction_loss = F.mse_loss(
+        reconstruction,
+        x,
+        reduction="sum"
+    )
+
+    kl_loss = -0.5 * torch.sum(
+        1 + log_var - mu.pow(2) - log_var.exp()
+    )
+
+    batch_size = x.size(0)
+
+    reconstruction_loss = reconstruction_loss / batch_size
+    kl_loss = kl_loss / batch_size
+
+    total_loss = reconstruction_loss + kl_loss
+
+    return total_loss, reconstruction_loss, kl_loss
