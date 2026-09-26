@@ -50,6 +50,7 @@ class VAE(nn.Module):
             latent_dim
         )
 
+        # We learn log_var instead of var because var can not be negative, and nn can output negative values.
         self.fc_log_var = nn.Linear(
             256 * 2 * 2,
             latent_dim
