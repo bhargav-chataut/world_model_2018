@@ -153,9 +153,32 @@ def train(data_dir):
 
         average_train_loss = train_loss / len(train_loader)
 
+        model.eval()
+
+        val_loss = 0.0
+
+        with torch.no_grad():
+
+            for x in val_loader:
+
+                x = x.to(device)
+
+                reconstruction, mu, log_var = model(x)
+
+                loss, reconstruction_loss, kl_loss = vae_loss(
+                    reconstruction,
+                    x,
+                    mu,
+                    log_var
+                )
+
+                val_loss += loss.item()
+
+        average_val_loss = val_loss / len(val_loader)
+
         print(
             f"Epoch {epoch + 1}/{EPOCHS} "
-            f"| Train Loss: {average_train_loss:.2f}"
+            f"| Train Loss: {average_train_loss:.2f} "
+            f"| Val Loss: {average_val_loss:.2f}"
         )
-
     return model
