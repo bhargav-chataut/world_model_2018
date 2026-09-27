@@ -37,8 +37,8 @@ def show_reconstructions(model, val_loader, device, num_images=6):
         axes[1, i].imshow(reconstruction[i].permute(1, 2, 0))
         axes[1, i].axis("off")
 
-    axes[0, num_images // 2].set_title("Original", fontsize=14)
-    axes[1, num_images // 2].set_title("Reconstruction", fontsize=14)
+    axes[0, num_images // 2 - 2].set_title("Original", fontsize=14)
+    axes[1, num_images // 2 - 2].set_title("Reconstruction", fontsize=14)
 
     plt.subplots_adjust(hspace=0.35)
     plt.show()
