@@ -83,7 +83,7 @@ def vae_loss(reconstruction, x, mu, log_var):
 
 
 
-def train():
+def train(data_dir):
     """
     Load the dataset, create batches, train the VAE, and save the model.
     """
@@ -94,7 +94,7 @@ def train():
 
     print("Device:", device)
 
-    train_frames, val_frames = load_dataset(DATA_DIR)
+    train_frames, val_frames = load_dataset(data_dir)
 
     train_frames = prepare_frames(train_frames)
     val_frames = prepare_frames(val_frames)
