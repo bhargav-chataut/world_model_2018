@@ -12,37 +12,42 @@ Steps:
 
 import torch
 import torch.nn.functional as F # Gives us loss functoins like MSELoss and KLDivLoss
-from torch.utils.data import TensorDataset, DataLoader # Gives us a way to create batches of data
+from torch.utils.data import Dataset, DataLoader # Gives us a way to create batches of data
 
 from vae import VAE
 from dataset import load_dataset
 
-
-DATA_DIR = "data"
 
 BATCH_SIZE = 64
 LEARNING_RATE = 1e-4
 EPOCHS = 1
 
 
-def prepare_frames(frames):
+class FrameDataset(Dataset):
     """
-    Convert NumPy frames from:
-        (N, 64, 64, 3)
+    Dataset for CarRacing frames.
 
-    to PyTorch tensors:
-        (N, 3, 64, 64)
+    Parameters:
+        frames: NumPy array of uint8 RGB frames
 
-    Also normalize pixel values from 0-255 to 0-1.
+    Returns:
+        One normalized PyTorch frame with shape (3, 64, 64)
     """
 
-    frames = torch.from_numpy(frames).float()
+    def __init__(self, frames):
+        self.frames = frames
 
-    frames = frames.permute(0, 3, 1, 2)
+    def __len__(self):
+        return len(self.frames)
 
-    frames = frames / 255.0
+    def __getitem__(self, index):
+        frame = self.frames[index]
 
-    return frames
+        frame = torch.from_numpy(frame).float()
+        frame = frame.permute(2, 0, 1)
+        frame = frame / 255.0
+
+        return frame
 
 
 def vae_loss(reconstruction, x, mu, log_var):
@@ -82,7 +87,6 @@ def vae_loss(reconstruction, x, mu, log_var):
     return total_loss, reconstruction_loss, kl_loss
 
 
-
 def train(data_dir):
     """
     Load the dataset, create batches, train the VAE, and save the model.
@@ -96,11 +100,8 @@ def train(data_dir):
 
     train_frames, val_frames = load_dataset(data_dir)
 
-    train_frames = prepare_frames(train_frames)
-    val_frames = prepare_frames(val_frames)
-
-    train_dataset = TensorDataset(train_frames)
-    val_dataset = TensorDataset(val_frames)
+    train_dataset = FrameDataset(train_frames)
+    val_dataset = FrameDataset(val_frames)
 
     train_loader = DataLoader(
         train_dataset,
@@ -128,8 +129,8 @@ def train(data_dir):
 
         train_loss = 0
 
-        # Loop through batches of training data. (x,) is a tuple, so we unpack it to get the actual batch of images.
-        for (x,) in train_loader:
+        # Loop through batches of training data.
+        for x in train_loader:
 
             x = x.to(device)
 
@@ -157,5 +158,4 @@ def train(data_dir):
             f"| Train Loss: {average_train_loss:.2f}"
         )
 
-if __name__ == "__main__":
-    train()
+    return model
