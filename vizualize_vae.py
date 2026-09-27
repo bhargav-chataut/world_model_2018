@@ -1,5 +1,5 @@
 """
-Visualize VAE reconstructions on validation frames.
+Vizualize VAE reconstructions on validation frames.
 """
 
 import torch
@@ -36,15 +36,27 @@ def show_reconstructions(model, val_loader, device, num_images=6):
         plt.imshow(x[i].permute(1, 2, 0))
         plt.axis("off")
 
-        if i == 0:
-            plt.ylabel("Original", fontsize=12)
-
         plt.subplot(2, num_images, num_images + i + 1)
         plt.imshow(reconstruction[i].permute(1, 2, 0))
         plt.axis("off")
 
-        if i == 0:
-            plt.ylabel("Reconstruction", fontsize=12)
+    plt.figtext(
+        0.01,
+        0.72,
+        "Original",
+        rotation=90,
+        va="center",
+        fontsize=12
+    )
 
-    plt.tight_layout()
+    plt.figtext(
+        0.01,
+        0.28,
+        "Reconstruction",
+        rotation=90,
+        va="center",
+        fontsize=12
+    )
+
+    plt.tight_layout(rect=[0.04, 0, 1, 1])
     plt.show()
