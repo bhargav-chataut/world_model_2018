@@ -10,6 +10,8 @@ Steps:
     6. Backpropagate and update weights
 """
 
+from pathlib import Path
+
 import torch
 import torch.nn.functional as F # Gives us loss functoins like MSELoss and KLDivLoss
 from torch.utils.data import Dataset, DataLoader # Gives us a way to create batches of data
@@ -87,10 +89,16 @@ def vae_loss(reconstruction, x, mu, log_var):
     return total_loss, reconstruction_loss, kl_loss
 
 
-def train(data_dir):
+def train(data_dir, save_dir="checkpoints"):
     """
-    Load the dataset, create batches, train the VAE, and save the model.
+    Train the VAE and save a checkpoint after each epoch.
+
+    save_dir: checkpoint folder; pass a mounted Drive path in Colab.
+    Use a different folder for each run to keep earlier checkpoints.
     """
+
+    save_dir = Path(save_dir)
+    save_dir.mkdir(parents=True, exist_ok=True)
 
     device = torch.device(
         "cuda" if torch.cuda.is_available() else "cpu"
@@ -181,4 +189,18 @@ def train(data_dir):
             f"| Train Loss: {average_train_loss:.2f} "
             f"| Val Loss: {average_val_loss:.2f}"
         )
+        checkpoint_path = save_dir / f"vae_epoch_{epoch + 1}.pt"
+        torch.save(
+            {
+                "epoch": epoch + 1,
+                "latent_dim": model.latent_dim,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "train_loss": average_train_loss,
+                "val_loss": average_val_loss,
+            },
+            checkpoint_path,
+        )
+        print("Saved checkpoint:", checkpoint_path)
+
     return model, val_loader, device
