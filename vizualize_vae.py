@@ -28,10 +28,10 @@ def show_reconstructions(model, val_loader, device, num_images=6):
     x = x.cpu()
     reconstruction = reconstruction.cpu()
 
-    plt.figure(figsize=(12, 4))
+    plt.figure(figsize=(12, 5))
 
-    plt.figtext(0.5, 0.95, "Original", ha="center", fontsize=12)
-    plt.figtext(0.5, 0.48, "Reconstruction", ha="center", fontsize=12)
+    plt.figtext(0.5, 0.98, "Original", ha="center", fontsize=12)
+    plt.figtext(0.5, 0.50, "Reconstruction", ha="center", fontsize=12)
 
     for i in range(num_images):
 
@@ -43,5 +43,5 @@ def show_reconstructions(model, val_loader, device, num_images=6):
         plt.imshow(reconstruction[i].permute(1, 2, 0))
         plt.axis("off")
 
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0, 1, 0.94], h_pad=2)
     plt.show()
