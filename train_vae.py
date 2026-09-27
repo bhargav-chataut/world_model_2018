@@ -150,9 +150,6 @@ def train(data_dir):
             optimizer.step()
 
             train_loss += loss.item()
-            print(next(model.parameters()).device)
-            print(torch.cuda.memory_allocated() / 1024**2, "MB")
-            print(torch.cuda.memory_reserved() / 1024**2, "MB")
 
         average_train_loss = train_loss / len(train_loader)
 
