@@ -181,4 +181,4 @@ def train(data_dir):
             f"| Train Loss: {average_train_loss:.2f} "
             f"| Val Loss: {average_val_loss:.2f}"
         )
-    return model
+    return model, val_loader, device
