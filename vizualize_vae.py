@@ -28,20 +28,17 @@ def show_reconstructions(model, val_loader, device, num_images=6):
     x = x.cpu()
     reconstruction = reconstruction.cpu()
 
-    plt.figure(figsize=(12, 5))
-
-    plt.figtext(0.5, 0.98, "Original", ha="center", fontsize=12)
-    plt.figtext(0.5, 0.50, "Reconstruction", ha="center", fontsize=12)
+    fig, axes = plt.subplots(2, num_images, figsize=(12, 5))
 
     for i in range(num_images):
+        axes[0, i].imshow(x[i].permute(1, 2, 0))
+        axes[0, i].axis("off")
 
-        plt.subplot(2, num_images, i + 1)
-        plt.imshow(x[i].permute(1, 2, 0))
-        plt.axis("off")
+        axes[1, i].imshow(reconstruction[i].permute(1, 2, 0))
+        axes[1, i].axis("off")
 
-        plt.subplot(2, num_images, num_images + i + 1)
-        plt.imshow(reconstruction[i].permute(1, 2, 0))
-        plt.axis("off")
+    axes[0, num_images // 2].set_title("Original", fontsize=14)
+    axes[1, num_images // 2].set_title("Reconstruction", fontsize=14)
 
-    plt.tight_layout(rect=[0, 0, 1, 0.94], h_pad=2)
+    plt.subplots_adjust(hspace=0.35)
     plt.show()
