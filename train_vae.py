@@ -67,7 +67,7 @@ def vae_loss(reconstruction, x, mu, log_var):
         reduction="sum"
     )
 
-    # KL Loss = -0.5 * sum(1 + log_var - mu^2 - var^2)
+    # KL Loss = -0.5 * sum(1 + log_var - mu^2 - var)
     kl_loss = -0.5 * torch.sum(
         1 + log_var - mu.pow(2) - log_var.exp()
     )
