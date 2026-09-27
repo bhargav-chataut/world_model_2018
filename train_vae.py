@@ -156,3 +156,6 @@ def train():
             f"Epoch {epoch + 1}/{EPOCHS} "
             f"| Train Loss: {average_train_loss:.2f}"
         )
+
+if __name__ == "__main__":
+    train()
