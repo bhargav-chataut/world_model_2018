@@ -22,7 +22,6 @@ from dataset import load_dataset
 
 BATCH_SIZE = 64
 LEARNING_RATE = 1e-4
-EPOCHS = 1
 
 
 class FrameDataset(Dataset):
@@ -89,11 +88,13 @@ def vae_loss(reconstruction, x, mu, log_var):
     return total_loss, reconstruction_loss, kl_loss
 
 
-def train(data_dir, save_dir="checkpoints"):
+def train(data_dir, save_dir="checkpoints", epochs=1, checkpoint_path=None):
     """
     Train the VAE and save a checkpoint after each epoch.
 
     save_dir: checkpoint folder; pass a mounted Drive path in Colab.
+    epochs: final epoch to reach, including epochs already completed.
+    checkpoint_path: optional checkpoint to resume model and optimizer state.
     Use a different folder for each run to keep earlier checkpoints.
     """
 
@@ -123,14 +124,31 @@ def train(data_dir, save_dir="checkpoints"):
         shuffle=False
     )
 
-    model = VAE().to(device)
+    start_epoch = 0
+    checkpoint = None
+
+    if checkpoint_path is not None:
+        checkpoint = torch.load(
+            checkpoint_path,
+            map_location=device,
+            weights_only=True,
+        )
+        model = VAE(latent_dim=checkpoint["latent_dim"]).to(device)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        start_epoch = checkpoint["epoch"]
+        print("Loaded checkpoint at epoch:", start_epoch)
+    else:
+        model = VAE().to(device)
 
     optimizer = torch.optim.Adam(
         model.parameters(),
         lr=LEARNING_RATE
     )
 
-    for epoch in range(EPOCHS):
+    if checkpoint is not None:
+        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+
+    for epoch in range(start_epoch, epochs):
 
         # Put the model in training mode. This is important for layers like dropout and batchnorm.
         model.train()
@@ -185,11 +203,11 @@ def train(data_dir, save_dir="checkpoints"):
         average_val_loss = val_loss / len(val_loader)
 
         print(
-            f"Epoch {epoch + 1}/{EPOCHS} "
+            f"Epoch {epoch + 1}/{epochs} "
             f"| Train Loss: {average_train_loss:.2f} "
             f"| Val Loss: {average_val_loss:.2f}"
         )
-        checkpoint_path = save_dir / f"vae_epoch_{epoch + 1}.pt"
+        save_path = save_dir / f"vae_epoch_{epoch + 1}.pt"
         torch.save(
             {
                 "epoch": epoch + 1,
@@ -199,8 +217,8 @@ def train(data_dir, save_dir="checkpoints"):
                 "train_loss": average_train_loss,
                 "val_loss": average_val_loss,
             },
-            checkpoint_path,
+            save_path,
         )
-        print("Saved checkpoint:", checkpoint_path)
+        print("Saved checkpoint:", save_path)
 
     return model, val_loader, device
