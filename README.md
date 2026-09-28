@@ -1,28 +1,45 @@
-# world_model_2018
-Reimplementation of Ha &amp; Schmidhuber’s World Models (2018), built from scratch with a focus on understanding each component and evaluating how the model learns and predicts environment dynamics.
+# World Models (2018) — Reimplementation
 
-VAE Architectures:
-1) ConVAE setup (similar to 2018 paper)
+A from-scratch reimplementation of Ha & Schmidhuber's **[World Models](https://arxiv.org/abs/1803.10122)** using the CarRacing environment.
 
-Input: (N, 3, 64, 64)
+The goal is to understand the full pipeline by building each component directly:
 
-ENCODER
+**pixels → VAE → MDN-RNN → controller**
 
-Conv2d(3 → 32, k=4, s=2) → (N, 32, 31, 31) → ReLU
-Conv2d(32 → 64, k=4, s=2) → (N, 64, 14, 14) → ReLU
-Conv2d(64 → 128, k=4, s=2) → (N, 128, 6, 6) → ReLU
-Conv2d(128 → 256, k=4, s=2) → (N, 256, 2, 2) → ReLU
-Flatten → (N, 1024)
-Linear(1024 → 32) → mu (N, 32)
-Linear(1024 → 32) → log_var (N, 32)
-Reparameterize: z = mu + std * epsilon → (N, 32) 
+## Current progress
 
-DECODER
+- [x] Collect CarRacing trajectories
+- [x] Train/validation dataset pipeline
+- [x] Convolutional VAE
+- [x] VAE checkpointing and reconstruction evaluation
+- [ ] MDN-RNN latent dynamics model
+- [ ] Controller
+- [ ] Dream rollouts and evaluation
 
-Linear(32 → 1024) → (N, 1024)
-Reshape → (N, 1024, 1, 1)
-ConvTranspose2d(1024 → 128, k=5, s=2) → (N, 128, 5, 5) → ReLU
-ConvTranspose2d(128 → 64, k=5, s=2) → (N, 64, 13, 13) → ReLU
-ConvTranspose2d(64 → 32, k=6, s=2) → (N, 32, 30, 30) → ReLU
-ConvTranspose2d(32 → 3, k=6, s=2) → (N, 3, 64, 64)
-Sigmoid → reconstructed image (N, 3, 64, 64)
+## VAE results
+
+The VAE compresses each **64×64 RGB frame** into a **32-dimensional latent vector** and reconstructs the observation from that representation.
+
+### Reconstructions
+
+![VAE reconstructions](assets/vae_reconstructions.png)
+
+### Training history
+
+![VAE training history](assets/vae_training_history.png)
+
+## Repository
+
+- `collect.py` — collect CarRacing episodes
+- `dataset.py` — training/validation data loading
+- `vae.py` — convolutional VAE
+- `train_vae.py` — VAE training and checkpointing
+- `vizualize_vae.py` — reconstruction visualization
+- `VAE_final.ipynb` — end-to-end VAE notebook
+- `PROGRESS.md` — daily build log
+
+## Why this project
+
+Rather than treating the paper as a black box, this project rebuilds the system component by component to understand how compact visual representations, learned latent dynamics, and control fit together.
+
+Next: **learn the environment dynamics with the MDN-RNN.**
