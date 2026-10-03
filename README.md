@@ -1,10 +1,16 @@
-# World Models (2018) — Reimplementation
+# Learning Compact Predictive World Models for Visual Control
 
-A from-scratch reimplementation of Ha & Schmidhuber's **[World Models](https://arxiv.org/abs/1803.10122)** using the CarRacing environment.
+A visual world-modeling project for the CarRacing environment focused on learning compact representations, predicting future latent states, and making those predictions easier to visualize and interpret.
 
-The goal is to understand the full pipeline by building each component directly:
+The project follows this pipeline:
 
 **pixels → VAE → MDN-RNN → controller**
+
+## Project goal
+
+The goal is to study how an agent can compress visual observations into a compact latent representation, learn how that latent state changes over time under different actions, and use those predictions for sequential decision-making.
+
+A key focus is interpretability: predicted latent states can be decoded back into images and compared with actual future observations, making it possible to inspect where the model predicts well and where errors accumulate.
 
 ## Current progress
 
@@ -14,7 +20,7 @@ The goal is to understand the full pipeline by building each component directly:
 - [x] VAE checkpointing and reconstruction evaluation
 - [ ] MDN-RNN latent dynamics model
 - [ ] Controller
-- [ ] Dream rollouts and evaluation
+- [ ] Multi-step latent rollouts and evaluation
 
 ## VAE results
 
@@ -38,8 +44,12 @@ The VAE compresses each **64×64 RGB frame** into a **32-dimensional latent vect
 - `VAE_final.ipynb` — end-to-end VAE notebook
 - `PROGRESS.md` — daily build log
 
-## Why this project
+## Research direction
 
-Rather than treating the paper as a black box, this project rebuilds the system component by component to understand how compact visual representations, learned latent dynamics, and control fit together.
+The next stage is to learn action-conditioned latent dynamics with an MDN-RNN, then evaluate how accurately predicted latent states can be rolled forward and decoded into visual future observations.
 
-Next: **learn the environment dynamics with the MDN-RNN.**
+This project is inspired by the World Models framework introduced by Ha and Schmidhuber and uses it as a foundation for exploring compact predictive models, latent dynamics, and visual interpretability in control.
+
+## Keywords
+
+World models, variational autoencoder (VAE), mixture density network recurrent neural network (MDN-RNN), explainable AI, latent dynamics, representation learning, visual control.
