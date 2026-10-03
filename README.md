@@ -44,11 +44,11 @@ The VAE compresses each **64×64 RGB frame** into a **32-dimensional latent vect
 - `VAE_final.ipynb` — end-to-end VAE notebook
 - `PROGRESS.md` — daily build log
 
-## Research direction
+## Research direction and paper credit
+
+This project is a from-scratch reimplementation of **[World Models](https://arxiv.org/abs/1803.10122)** by David Ha and Jürgen Schmidhuber (2018). The original paper introduced the VAE + MDN-RNN + controller framework that this project follows. My implementation is focused on understanding each component directly, reproducing the core pipeline in CarRacing, and then examining the learned latent representations and visual predictions to better understand where the model succeeds and where prediction errors accumulate.
 
 The next stage is to learn action-conditioned latent dynamics with an MDN-RNN, then evaluate how accurately predicted latent states can be rolled forward and decoded into visual future observations.
-
-This project is inspired by the World Models framework introduced by Ha and Schmidhuber and uses it as a foundation for exploring compact predictive models, latent dynamics, and visual interpretability in control.
 
 ## Keywords
 
