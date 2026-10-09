@@ -5,3 +5,4 @@
 - Day 3: Built and understood the 2018-style ConvVAE, including CNN feature-map shapes, mu/log_var, reparameterization to sample z, and decoding back to a 64×64 RGB reconstruction.
 - Day 4: The VAE is now fully trainable and we can visually inspect whether the latent representation is preserving useful information from the CarRacing frames.
 - Day 5: Finished the VAE pipeline end-to-end, added checkpoint/resume support with Adam state, validated reconstructions/loss curves, and finalized the VAE Colab notebook for GitHub. /checkpoint contains model weights, optimizer state, epoch number, train loss, validation loss
+- Day 6: Inspected the VAE latent space with PCA, encoded all 100 CarRacing episodes into mu, log_var, and actions, and verified the latent dataset for MDN-RNN training.
