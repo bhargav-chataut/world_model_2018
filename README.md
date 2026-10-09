@@ -34,6 +34,9 @@ The VAE compresses each **64×64 RGB frame** into a **32-dimensional latent vect
 
 ![VAE training history](assets/vae_training_history.png)
 
+### Latent Space
+![VAE latent space](assets/vae_latent_space.jpg)
+
 ## Repository
 
 - `collect.py` — collect CarRacing episodes
