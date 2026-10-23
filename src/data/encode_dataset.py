@@ -12,7 +12,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from vae import VAE
+from src.models.vae import VAE
 
 
 def load_vae(checkpoint_path, device):

@@ -1,11 +1,11 @@
 """
-Vizualize VAE reconstructions on validation frames.
+Visualize VAE reconstructions on validation frames.
 """
 
 import torch
 import matplotlib.pyplot as plt
 
-from vae import VAE
+from src.models.vae import VAE
 
 
 def show_reconstructions(model, val_loader, device, num_images=6):

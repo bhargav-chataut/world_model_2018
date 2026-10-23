@@ -39,13 +39,50 @@ The VAE compresses each **64×64 RGB frame** into a **32-dimensional latent vect
 
 ## Repository
 
-- `collect.py` — collect CarRacing episodes
-- `dataset.py` — training/validation data loading
-- `vae.py` — convolutional VAE
-- `train_vae.py` — VAE training and checkpointing
-- `vizualize_vae.py` — reconstruction visualization
-- `VAE_final.ipynb` — end-to-end VAE notebook
-- `PROGRESS.md` — daily build log
+```text
+src/
+├── data/
+│   ├── collect.py
+│   ├── dataset.py
+│   ├── encode_dataset.py
+│   └── rnn_dataset.py
+├── models/
+│   ├── vae.py
+│   └── rnn.py
+├── training/
+│   ├── train_vae.py
+│   └── train_rnn.py
+└── visualization/
+    ├── view_episode.py
+    └── visualize_vae.py
+notebooks/
+└── VAE_final.ipynb
+assets/
+```
+
+The RNN dataset, model, and training files are placeholders for the next stage.
+Each Python package also contains an `__init__.py` file.
+
+Run commands from the repository root so imports and relative data paths resolve:
+
+```bash
+python -m src.data.collect
+python -m src.data.dataset
+python -m src.visualization.view_episode
+```
+
+The episode viewer expects `episode.npz` in the working directory and writes `ep.gif`.
+Training, encoding, and VAE visualization expose functions to import:
+
+```python
+from src.training.train_vae import train
+from src.data.encode_dataset import encode_dataset
+from src.visualization.visualize_vae import show_checkpoint_reconstructions
+```
+
+The notebook in `notebooks/VAE_final.ipynb` runs in Colab and changes to the
+cloned repository root before importing these packages. For local notebook use,
+set the working directory to the repository root before running imports.
 
 ## Research direction and paper credit
 

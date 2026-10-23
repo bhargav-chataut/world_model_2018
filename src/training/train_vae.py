@@ -16,8 +16,8 @@ import torch
 import torch.nn.functional as F # Gives us loss functoins like MSELoss and KLDivLoss
 from torch.utils.data import Dataset, DataLoader # Gives us a way to create batches of data
 
-from vae import VAE
-from dataset import load_dataset
+from src.models.vae import VAE
+from src.data.dataset import load_dataset
 
 
 BATCH_SIZE = 64

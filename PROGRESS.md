@@ -1,8 +1,0 @@
-## Progress Report
-
-- Day 1: Set up CarRacing-v3 data collection, collected one random episode, and saved it as a `.npz` file containing frames `(N, 64, 64, 3)` and actions `(N, 3)`.
-- Day 2: Created a dataset of 100 episodes. Split them into tran, validation set. Decided to use same 2018 ConvVAE setup for now. In Google Drive, /data folder is basically a collection of episodes, and each episode file contains the sequence of frames & actions.
-- Day 3: Built and understood the 2018-style ConvVAE, including CNN feature-map shapes, mu/log_var, reparameterization to sample z, and decoding back to a 64×64 RGB reconstruction.
-- Day 4: The VAE is now fully trainable and we can visually inspect whether the latent representation is preserving useful information from the CarRacing frames.
-- Day 5: Finished the VAE pipeline end-to-end, added checkpoint/resume support with Adam state, validated reconstructions/loss curves, and finalized the VAE Colab notebook for GitHub. /checkpoint contains model weights, optimizer state, epoch number, train loss, validation loss
-- Day 6: Inspected the VAE latent space with PCA, encoded all 100 CarRacing episodes into mu, log_var, and actions, and verified the latent dataset for MDN-RNN training.
