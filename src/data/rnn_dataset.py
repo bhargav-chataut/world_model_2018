@@ -26,17 +26,12 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-
 class RNNDataset(Dataset):
-    def __init__(self, latent_dir, sequence_length=32):
+    def __init__(self, episode_files, sequence_length=32):
         """
         Load encoded episodes and create valid sequence starting points.
         """
         self.sequence_length = sequence_length
-
-        episode_files = sorted(
-            Path(latent_dir).glob("episode_*.npz")
-        )
 
         self.episodes = []
         self.samples = []
@@ -64,7 +59,7 @@ class RNNDataset(Dataset):
 
     def __len__(self):
         """
-        Return the total number of available sequence samples.
+        Return total number of sequence samples.
         """
         return len(self.samples)
 
@@ -92,6 +87,37 @@ class RNNDataset(Dataset):
 
         return inputs, targets
 
+
+def load_rnn_datasets(
+    latent_dir,
+    sequence_length=32,
+    val_split=0.1
+):
+    """
+    Split whole episodes into training and validation datasets.
+    """
+    episode_files = sorted(
+        Path(latent_dir).glob("episode_*.npz")
+    )
+
+    split_index = int(
+        len(episode_files) * (1 - val_split)
+    )
+
+    train_files = episode_files[:split_index]
+    val_files = episode_files[split_index:]
+
+    train_dataset = RNNDataset(
+        train_files,
+        sequence_length=sequence_length
+    )
+
+    val_dataset = RNNDataset(
+        val_files,
+        sequence_length=sequence_length
+    )
+
+    return train_dataset, val_dataset
 
 if __name__ == "__main__":
 
