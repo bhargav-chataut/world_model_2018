@@ -1,6 +1,14 @@
 """
-Load CarRacing frames from saved .npz episodes.
+Create Dataset for training the VAE.
+Requirement: data_dir containing .npz episode files with frames and actions.
 
+Parameters:
+    data_dir: folder containing .npz episode files
+    val_split: % of validation frames
+
+Output:
+    train_frames: (N, 64, 64, 3) uint8 array
+    val_frames: (M, 64, 64, 3) uint8 array
 """
 
 import numpy as np

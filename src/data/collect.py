@@ -1,10 +1,18 @@
 """
-Collect CarRacing-v3 episodes and save frames/actions as .npz files.
-
+Parallel Rollout Collection from CarRacing-v3 Environment
 Parameters:
     num_episodes: number of episodes to collect
     output_dir: folder where episodes will be saved
     workers: number of processes collecting episodes in parallel
+
+Output: ./data
+                -> episode_0000.npz
+                -> episode_0001.npz, ......
+
+.npz files contain:
+    frames: (N, 64, 64, 3) uint8 array of RGB frames
+    actions: (N, 3) float32 array of actions
+
 """
 
 import gymnasium as gym

@@ -1,10 +1,12 @@
 """
-Encode CarRacing episode frames with the trained VAE.
+Encode dataset using the trained VAE model.
+Requirement: checkpoint_dir containing trained VAE checkpoint, and data_dir containing .npz episode files with frames and actions.
 
-Each encoded episode stores:
-- mu
-- log_var
-- actions
+Output: encoded .npz files with mu and log_var values.
+.npz files contain:
+    mu: (N, latent_dim) float32 array of VAE mu values
+    log_var: (N, latent_dim) float32 array of VAE log_var values
+    actions: (N, 3) float32 array of actions
 """
 
 from pathlib import Path
