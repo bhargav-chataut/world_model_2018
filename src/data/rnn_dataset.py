@@ -1,26 +1,20 @@
 """
 Create Dataset for training the RNN.
 
-Requirement:
-    latent_dir containing encoded .npz episode files with:
-    - mu
-    - log_var
-    - actions
+Requirement: latent_dir containing encoded .npz episode files with mu, log_var, actions
 
 Parameters:
-    latent_dir: Folder containing encoded episode files.
-
-    sequence_length:Number of consecutive timesteps in one sample.
+    latent_dir: folder containing encoded episode files
+    sequence_length: number of consecutive timesteps in one sample
+    val_split: percentage of whole episodes used for validation
 
 Output:
-    RNNDataset object containing ordered sequence samples.
+    train_dataset: RNNDataset containing training sequences
+    val_dataset: RNNDataset containing validation sequences
 
 Each sample contains:
-    current_sequence:  (sequence_length, 35)
-            32 mu values + 3 action values
-
-    next_sequence: (sequence_length, 32)
-            32 next mu values
+    current_sequence:(sequence_length, 35) 32 mu values + 3 action values
+    next_sequence: (sequence_length, 32) 32 next mu values
 
 For now, log_var is stored in the encoded files but is not used
 for the deterministic RNN baseline.
